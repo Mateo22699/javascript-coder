@@ -1,111 +1,116 @@
-// Cotizador de seguros 
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("form-cotizacion");
+  const tipoSeguro = document.getElementById("tipoSeguro");
+  const marca = document.getElementById("marca");
+  const modelo = document.getElementById("modelo");
+  const anio = document.getElementById("anio");
+  const resultado = document.getElementById("resultado");
+  const historial = document.getElementById("historial");
+  const borrarHistorialBtn = document.getElementById("borrarHistorial");
 
-// Arrays con datos de ejemplo
-const marcas = ["Toyota", "Ford", "Chevrolet", "Volkswagen", "Renault"];
-const modelos = ["Sedán", "SUV", "Camioneta", "Hatchback"];
+  const precioBase = 100000;
 
-// Variables y constantes
-const precioBase = 100000;
-let marcaElegida, modeloElegido, año, tipoSeguro;
-
-// Función para mostrar opciones con un ciclo
-function mostrarOpciones(array) {
-  let texto = "";
-  for (let i = 0; i < array.length; i++) {
-    texto += `${i + 1}. ${array[i]}\n`;
-  }
-  return texto;
-}
-
-// Función 
-function cotizarSeguro() {
-  alert("Bienvenido al cotizador de seguros!");
-
-  // Elegir marca
-  let marcaIndex = prompt(
-    "Seleccioná la marca de tu vehículo:\n" + mostrarOpciones(marcas)
-  );
-  marcaElegida = marcas[marcaIndex - 1];
-
-  // Validación
-  if (!marcaElegida) {
-    alert("Opción no válida. Intentalo de nuevo.");
-    return;
+  // Llenar años desde 2025 hasta 1990
+  for (let i = 2025; i >= 1990; i--) {
+    const option = document.createElement("option");
+    option.value = i;
+    option.textContent = i;
+    anio.appendChild(option);
   }
 
-  // Elegir modelo
-  let modeloIndex = prompt(
-    "Seleccioná el modelo de tu vehículo:\n" + mostrarOpciones(modelos)
-  );
-  modeloElegido = modelos[modeloIndex - 1];
-
-  if (!modeloElegido) {
-    alert("Opción no válida. Intentalo de nuevo.");
-    return;
+  // Guardar cotización en localStorage
+  function guardarCotizacion(data) {
+    const cotizaciones = JSON.parse(localStorage.getItem("historial")) || [];
+    cotizaciones.push(data);
+    localStorage.setItem("historial", JSON.stringify(cotizaciones));
   }
 
-  // Año del auto
-  anio = parseInt(prompt("Ingresá el año del vehículo (por ejemplo: 2018):"));
-  if (isNaN(año)) {
-    alert("Por favor ingresá un año válido.");
-    return;
+  // Mostrar historial
+  function mostrarHistorial() {
+    historial.innerHTML = "<h2>Historial de Cotizaciones</h2>";
+    const cotizaciones = JSON.parse(localStorage.getItem("historial")) || [];
+    cotizaciones.forEach(c => {
+      const div = document.createElement("div");
+      div.classList.add("card");
+      div.innerHTML = `
+        <p><strong>Tipo:</strong> ${c.tipo}</p>
+        ${c.tipo === "auto" ? `<p><strong>Marca:</strong> ${c.marca}</p>` : ""}
+        ${c.tipo === "auto" ? `<p><strong>Modelo:</strong> ${c.modelo}</p>` : ""}
+        ${c.tipo === "auto" ? `<p><strong>Año:</strong> ${c.anio}</p>` : ""}
+        <p><strong>Precio:</strong> $${c.precioFinal}</p>
+      `;
+      historial.appendChild(div);
+    });
   }
-
-  // Tipo de seguro
-  let tipo = prompt("¿Qué tipo de seguro querés? (1 = Tercero completo, 2 = Todo Riesgo)");
-  tipoSeguro = tipo === "1" ? "Tercero Completo" : "Todo Riesgo";
 
   // Calcular precio
-  let precioFinal = calcularPrecio(marcaElegida, año, tipoSeguro);
+  function calcularPrecio(tipo, marca, anio) {
+    let precio = precioBase;
 
-  // resultado
-  alert(
-    `Resumen de tu cotización:\n
-    Marca: ${marcaElegida}\n
-    Modelo: ${modeloElegido}\n
-    Año: ${año}\n
-    Tipo de seguro: ${tipoSeguro}\n
-    Precio estimado: $${precioFinal}`
-  );
+    switch (tipo) {
+      case "auto":
+        if (marca === "Toyota" || marca === "Volkswagen") precio += 30000;
+        else if (marca === "Ford") precio += 20000;
+        else precio += 15000;
+        const antiguedad = 2025 - anio;
+        precio -= antiguedad * 2000;
+        break;
+      case "hogar":
+        precio *= 1.3;
+        break;
+      case "vida":
+        precio *= 1.5;
+        break;
+      case "comercio":
+        precio *= 1.8;
+        break;
+      default:
+        precio *= 1.1;
+    }
 
-  console.log("Cotización generada:", {
-    marca: marcaElegida,
-    modelo: modeloElegido,
-    año: año,
-    tipo: tipoSeguro,
-    precio: precioFinal,
+    return Math.max(precio, 30000); // evita que sea negativo
+  }
+
+  // Evento submit
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const tipo = tipoSeguro.value;
+    const marcaSeleccionada = marca.value;
+    const modeloSeleccionado = modelo.value;
+    const anioSeleccionado = anio.value;
+
+    if (!tipo) {
+      alert("Seleccioná el tipo de seguro.");
+      return;
+    }
+
+    const precioFinal = calcularPrecio(tipo, marcaSeleccionada, anioSeleccionado);
+
+    const cotizacion = { tipo, marca: marcaSeleccionada, modelo: modeloSeleccionado, anio: anioSeleccionado, precioFinal };
+
+    guardarCotizacion(cotizacion);
+
+    resultado.innerHTML = `
+      <div class="card">
+        <h2>Resultado de cotización:</h2>
+        <p><strong>Tipo:</strong> ${tipo}</p>
+        ${tipo === "auto" ? `<p><strong>Marca:</strong> ${marcaSeleccionada}</p>` : ""}
+        ${tipo === "auto" ? `<p><strong>Modelo:</strong> ${modeloSeleccionado}</p>` : ""}
+        ${tipo === "auto" ? `<p><strong>Año:</strong> ${anioSeleccionado}</p>` : ""}
+        <p><strong>Precio estimado:</strong> $${precioFinal}</p>
+      </div>
+    `;
+
+    mostrarHistorial();
   });
-}
 
-// Función que calcula el precio final
-function calcularPrecio(marca, año, tipo) {
-  let precio = precioBase;
+  // Botón borrar historial
+  borrarHistorialBtn.addEventListener("click", () => {
+    localStorage.removeItem("historial");
+    historial.innerHTML = "";
+    alert("Historial eliminado correctamente");
+  });
 
-  // Aumenta según marca
-  if (marca === "Toyota" || marca === "Volkswagen") {
-    precio += 30000;
-  } else if (marca === "Ford") {
-    precio += 20000;
-  } else {
-    precio += 15000;
-  }
-
-  // Descuento según año
-  let antiguedad = 2025 - año;
-  precio -= antiguedad * 2000;
-
-  // Tipo de seguro
-  if (tipo === "Todo Riesgo") {
-    precio *= 1.5;
-  }
-
-  return precio;
-}
-
-// Confirmar para cotizar
-let iniciar = confirm("¿Querés realizar una cotización?");
-if (iniciar) {
-  cotizarSeguro();
-} else {
-  alert("Gracias por visitar nuestra página de seguros.");
-}
+  mostrarHistorial();
+});

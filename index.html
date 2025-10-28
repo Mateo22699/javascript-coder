@@ -1,15 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cotizador de Seguros</title>
+
+  <!-- Fuentes y estilos -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/cotizador.css">
+
+  <!-- Íconos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
+
 <body>
-    
+  <header>
+    <h1><i class="fa-solid fa-shield-halved"></i> Cotizador de Seguros RF</h1>
+  </header>
 
+  <main>
+    <form id="form-cotizacion">
+      <div class="campo">
+        <label for="tipoSeguro"><i class="fa-solid fa-car"></i> Tipo de seguro:</label>
+        <select id="tipoSeguro" required>
+          <option value="">Seleccioná una opción</option>
+          <option value="auto">Auto</option>
+          <option value="hogar">Hogar</option>
+          <option value="vida">Vida</option>
+          <option value="comercio">Comercio</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
 
-<script src="app.js"></script>
+      <div class="campo">
+        <label for="marca"><i class="fa-solid fa-gear"></i> Marca del auto:</label>
+        <select id="marca">
+          <option value="">Seleccioná una marca</option>
+          <option value="Ford">Ford</option>
+          <option value="Chevrolet">Chevrolet</option>
+          <option value="Volkswagen">Volkswagen</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Honda">Honda</option>
+          <option value="Renault">Renault</option>
+        </select>
+      </div>
 
+      <div class="campo">
+        <label for="modelo"><i class="fa-solid fa-car-side"></i> Tipo de vehículo:</label>
+        <select id="modelo">
+          <option value="">Seleccioná un tipo</option>
+          <option value="Sedán">Sedán</option>
+          <option value="SUV">SUV</option>
+          <option value="Camioneta">Camioneta</option>
+          <option value="Hatchback">Hatchback</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="anio"><i class="fa-solid fa-calendar-days"></i> Año del vehículo:</label>
+        <select id="anio"></select>
+      </div>
+
+      <button type="submit" class="btn-principal">Calcular Cotización</button>
+    </form>
+
+    <section id="resultado"></section>
+    <section id="historial"></section>
+
+    <button id="borrarHistorial" class="btn-secundario">🗑️ Borrar Historial</button>
+  </main>
+
+  <footer>
+    <p>© 2025 Seguros RF - Proyecto de JavaScript</p>
+  </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
