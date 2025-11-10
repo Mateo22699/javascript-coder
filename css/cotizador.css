@@ -82,7 +82,7 @@ button {
   background: #bbb;
 }
 
-/* Tarjetas de resultado */
+/* Tarjetas */
 #resultado, #historial {
   margin-top: 20px;
 }
@@ -112,4 +112,17 @@ footer {
   font-size: 0.9rem;
 }
 
+/* 🔄 Loader */
+.loader {
+  margin-top: 5px;
+  font-size: 0.9rem;
+  color: var(--color-secundario);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.oculto {
+  display: none;
+}
 

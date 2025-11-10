@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -32,17 +31,25 @@
         </select>
       </div>
 
+      <!-- 🆕 Cobertura (solo se muestra si elige "auto") -->
+      <div class="campo" id="campo-cobertura" style="display: none;">
+        <label for="cobertura"><i class="fa-solid fa-shield"></i> Tipo de cobertura:</label>
+        <select id="cobertura">
+          <option value="">Seleccioná cobertura</option>
+          <option value="terceros">Terceros</option>
+          <option value="completo">Terceros Completo</option>
+          <option value="todo">Todo Riesgo</option>
+        </select>
+      </div>
+
       <div class="campo">
         <label for="marca"><i class="fa-solid fa-gear"></i> Marca del auto:</label>
         <select id="marca">
           <option value="">Seleccioná una marca</option>
-          <option value="Ford">Ford</option>
-          <option value="Chevrolet">Chevrolet</option>
-          <option value="Volkswagen">Volkswagen</option>
-          <option value="Toyota">Toyota</option>
-          <option value="Honda">Honda</option>
-          <option value="Renault">Renault</option>
         </select>
+        <div id="loader" class="loader oculto">
+          <i class="fa-solid fa-spinner fa-spin"></i> Cargando marcas...
+        </div>
       </div>
 
       <div class="campo">
@@ -74,6 +81,6 @@
     <p>© 2025 Seguros RF - Proyecto de JavaScript</p>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
